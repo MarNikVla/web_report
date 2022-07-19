@@ -31,7 +31,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="navbar-top.css" rel="stylesheet">
+{#    <link href="navbar-top.css" rel="stylesheet">#}
 </head>
 <body>
 
@@ -66,6 +66,11 @@
             works. As you scroll, this navbar remains in its original position and moves with the
             rest of the page.</p>
         {% bootstrap_button "test" href='http://127.0.0.1:8000/admin' button_type="link" button_class="btn-primary" %}
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+        </form>
         <a class="btn btn-lg btn-primary" role="button">View navbar docs &raquo;</a>
     </div>
 </main>
