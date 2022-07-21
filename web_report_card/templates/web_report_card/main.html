@@ -1,7 +1,13 @@
 {% load static %}
+{# Load the tag library #}
 {% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
 
 <!doctype html>
 <html lang="ru">
@@ -12,8 +18,24 @@
           content="Пример на bootstrap 5: Статичная панель навигации с дополнительным контентом · Версия v5.2.0-beta1">
     <title>Статичная панель навигации | Navbar static example · Версия v5.2.0-beta1</title>
 
-
+    <script src="{% static 'js/drag_drop.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <style>
+        .parent {
+            float: left;
+            margin-left: 5px;
+            height: 200px;
+            width: 200px;
+            border: 3px solid black
+        }
+
+        .child {
+            height: 50px;
+            width: 50px;
+            background-color: khaki;
+        }
+
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -31,7 +53,7 @@
 
 
     <!-- Custom styles for this template -->
-{#    <link href="navbar-top.css" rel="stylesheet">#}
+    {#    <link href="navbar-top.css" rel="stylesheet">#}
 </head>
 <body>
 
@@ -70,6 +92,13 @@
             {% csrf_token %}
             {% bootstrap_form form %}
             {% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+            <div class="parent">
+                <div class="child"></div>
+            </div>
+            <div class="parent">
+            </div>
+            <div class="parent">
+            </div>
         </form>
         <a class="btn btn-lg btn-primary" role="button">View navbar docs &raquo;</a>
     </div>
