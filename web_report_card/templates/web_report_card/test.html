@@ -1,0 +1,57 @@
+<html>
+<head>
+    <title>jQuery Ajax Drag and Drop File Upload with Python Flask and MySQLdb</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css"/>
+</head>
+<body>
+<div class="container">
+    {% csrf_token %}
+    <h2>jQuery Ajax Drag and Drop File Upload with Python Flask and MySQLdb</h2>
+    <div class="dropzone">
+
+        <div class="dz-message needsclick">
+            <h1>Drop files here or click to upload.</h1>
+        </div>
+    </div>
+</div>
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+    $(document).ready(function () {
+        $(".dropzone").dropzone({
+            url: '/media/2/',
+
+            headers: {
+                'Accept': 'application/json',
+                'Cooc': 'fdfdf',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken },
+                width: 300,
+                height: 300,
+                progressBarWidth: '100%',
+                maxFileSize: '5MB',
+            })
+    })
+        ;
+
+</script>
+</body>
+</html>   

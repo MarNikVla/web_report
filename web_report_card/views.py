@@ -28,3 +28,6 @@ class MyListView(FormView):
 
 class HomeView(TemplateView):
     template_name = 'web_report_card/main.html'
+
+class TestView(TemplateView):
+    template_name = 'web_report_card/test.html'
