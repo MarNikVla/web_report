@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import FormMixin, FormView
 
-from web_report_card.forms import DocumentForm
+from web_report_card.forms import DocumentForm, DocumentFormDrop
 from web_report_card.models import Document
 
 
@@ -29,5 +29,11 @@ class MyListView(FormView):
 class HomeView(TemplateView):
     template_name = 'web_report_card/main.html'
 
-class TestView(TemplateView):
+class TestView(FormView):
+    form_class = DocumentFormDrop
     template_name = 'web_report_card/test.html'
+    success_url = reverse_lazy('web_report_card:home')
+
+    def form_valid(self, form):
+        Document.objects.create(**form.cleaned_data)
+        return redirect(self.get_success_url())
