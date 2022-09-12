@@ -37,3 +37,12 @@ class TestView(FormView):
     def form_valid(self, form):
         Document.objects.create(**form.cleaned_data)
         return redirect(self.get_success_url())
+
+class TestView2(FormView):
+    form_class = DocumentFormDrop
+    template_name = 'web_report_card/test2.html'
+    success_url = reverse_lazy('web_report_card:home')
+
+    def form_valid(self, form):
+        Document.objects.create(**form.cleaned_data)
+        return redirect(self.get_success_url())
