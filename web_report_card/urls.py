@@ -8,4 +8,5 @@ urlpatterns = [
     path('test/', views.TestView.as_view(), name='test'),
     path('test2/', views.TestView2.as_view(), name='test2'),
     path('test-dropzone/', views.TestViewDropzone.as_view(), name='test-dropzone'),
+    path('upload/', views.file_upload),
 ]

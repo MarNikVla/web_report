@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
@@ -52,6 +52,22 @@ class TestViewDropzone(FormView):
     template_name = 'web_report_card/test dropzone.html'
     success_url = reverse_lazy('web_report_card:home')
 
+    def post(self, request, *args, **kwargs):
+        print('sdfs')
+        my_file = request.FILES.get('file')
+        print(self)
+        # Document.objects.create(**form.cleaned_data)
+        return redirect(self.get_success_url())
+
     def form_valid(self, form):
         Document.objects.create(**form.cleaned_data)
         return redirect(self.get_success_url())
+
+
+def file_upload(request):
+    if request.method == 'POST':
+        my_file=request.FILES.get('file')
+        print(my_file)
+        Document.objects.create(docfile=my_file)
+        return HttpResponse('')
+    return JsonResponse({'post':'fasle'})
