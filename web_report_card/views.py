@@ -11,10 +11,6 @@ from web_report_card.forms import DocumentForm, DocumentFormDrop
 from web_report_card.models import Document
 
 
-# class FormListView(FormMixin, ListView):
-
-
-
 
 class MyListView(FormView):
     form_class = DocumentForm
@@ -26,8 +22,18 @@ class MyListView(FormView):
         return redirect(self.get_success_url())
 
 
-class HomeView(TemplateView):
+class HomeView(FormView):
+    form_class = DocumentFormDrop
     template_name = 'web_report_card/main.html'
+    success_url = reverse_lazy('web_report_card:home')
+
+    def post(self, request, *args, **kwargs):
+        print('sdfs')
+        my_file = request.FILES.get('file')
+        print(my_file)
+        # print(self)
+        Document.objects.create(docfile=my_file)
+        return redirect(self.get_success_url())
 
 class TestView(FormView):
     form_class = DocumentFormDrop
@@ -55,8 +61,9 @@ class TestViewDropzone(FormView):
     def post(self, request, *args, **kwargs):
         print('sdfs')
         my_file = request.FILES.get('file')
-        print(self)
-        # Document.objects.create(**form.cleaned_data)
+        print(my_file)
+        # print(self)
+        Document.objects.create(docfile=my_file)
         return redirect(self.get_success_url())
 
     def form_valid(self, form):
