@@ -67,7 +67,11 @@ class TestViewDropzone(FormView):
 def file_upload(request):
     if request.method == 'POST':
         my_file=request.FILES.get('file')
-        print(my_file)
+        print(my_file.name)
         Document.objects.create(docfile=my_file)
+        # if my_file.name.endswith('.xlsx'):
+        #     Document.objects.create(docfile=my_file)
+        # else:
+        #     return HttpResponse('/ghh')
         return HttpResponse('')
     return JsonResponse({'post':'fasle'})
