@@ -31,8 +31,8 @@ class HomeView(FormView):
         print('sdfs')
         my_file = request.FILES.get('file')
         print(my_file)
-        # print(self)
-        Document.objects.create(docfile=my_file)
+        print(self)
+        # Document.objects.create(docfile=my_file)
         return redirect(self.get_success_url())
 
 class TestView(FormView):
