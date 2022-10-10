@@ -9,3 +9,8 @@ const myDropzone = new Dropzone('#my-dropzone', {
     dictDefaultMessage: 'Upload your files here',
 
 })
+
+$("#button").click(function (e) {
+    e.preventDefault();
+    myDropzone.processQueue();
+});
