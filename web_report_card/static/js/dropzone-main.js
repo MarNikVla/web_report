@@ -1,7 +1,7 @@
 Dropzone.autoDiscover = false;
 const myDropzone = new Dropzone('#my-dropzone', {
     // url:'/upload/',
-    autoProcessQueue: false,
+    autoProcessQueue: true,
     maxFiles: 5,
     maxFilesize: 2,
     // acceptedFiles:'.xlsx',
@@ -10,7 +10,7 @@ const myDropzone = new Dropzone('#my-dropzone', {
 
 })
 
-$("#button").click(function (e) {
-    e.preventDefault();
-    myDropzone.processQueue();
-});
+// $("#button").click(function (e) {
+//     e.preventDefault();
+//     myDropzone.processQueue();
+// });

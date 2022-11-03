@@ -11,28 +11,23 @@ from web_report_card.forms import DocumentForm, DocumentFormDrop
 from web_report_card.models import Document
 
 
-
-class MyListView(FormView):
-    form_class = DocumentForm
-    template_name = 'web_report_card/main.html'
-    success_url = reverse_lazy('web_report_card:home')
-
-    def form_valid(self, form):
-        Document.objects.create(**form.cleaned_data)
-        return redirect(self.get_success_url())
-
-
 class HomeView(FormView):
     form_class = DocumentFormDrop
     template_name = 'web_report_card/main.html'
-    success_url = reverse_lazy('web_report_card:home')
+    success_url = reverse_lazy('web_report_card:test')
+
 
     def post(self, request, *args, **kwargs):
         print('sdfs')
         my_file = request.FILES.get('file')
-        print(my_file)
-        print(self)
-        Document.objects.create(docfile=my_file)
+        # print(my_file)
+        # print(self)
+        request.session['grafik'] = my_file
+        # test_url = reverse_lazy('web_report_card:test')
+        # redirect(test_url)
+        # Document.objects.create(docfile=my_file)
+        # return redirect(test_url)
+        print(request.session['grafik'])
         return redirect(self.get_success_url())
 
 class TestView(FormView):
@@ -40,18 +35,16 @@ class TestView(FormView):
     template_name = 'web_report_card/test.html'
     success_url = reverse_lazy('web_report_card:home')
 
-    def form_valid(self, form):
-        Document.objects.create(**form.cleaned_data)
-        return redirect(self.get_success_url())
-
-class TestView2(FormView):
-    form_class = DocumentFormDrop
-    template_name = 'web_report_card/test2.html'
-    success_url = reverse_lazy('web_report_card:home')
+    def get(self, request, *args, **kwargs):
+        print('ffffffffffffffffffffffffffffffffffffffffffffff')
+        file = request.session['grafik']
+        print(file)
+        return super(TestView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
         Document.objects.create(**form.cleaned_data)
         return redirect(self.get_success_url())
+
 
 class TestViewDropzone(FormView):
     form_class = DocumentFormDrop
