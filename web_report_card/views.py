@@ -1,6 +1,6 @@
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext as _
 
 # Create your views here.
@@ -14,21 +14,22 @@ from web_report_card.models import Document
 class HomeView(FormView):
     form_class = DocumentFormDrop
     template_name = 'web_report_card/main.html'
-    success_url = reverse_lazy('web_report_card:test')
+    # success_url = reverse_lazy('web_report_card:test')
 
+
+    def get_success_url(self):
+        return reverse('web_report_card:test')
 
     def post(self, request, *args, **kwargs):
         print('sdfs')
         my_file = request.FILES.get('file')
         # print(my_file)
-        # print(self)
         request.session['grafik'] = my_file
         # test_url = reverse_lazy('web_report_card:test')
-        # redirect(test_url)
         # Document.objects.create(docfile=my_file)
-        # return redirect(test_url)
         print(request.session['grafik'])
-        return redirect(self.get_success_url())
+
+        return redirect(self.get_success_url(), foo = 'bar')
 
 class TestView(FormView):
     form_class = DocumentFormDrop
@@ -68,10 +69,10 @@ def file_upload(request):
     if request.method == 'POST':
         my_file=request.FILES.get('file')
         print(my_file.name)
-        Document.objects.create(docfile=my_file)
+        # Document.objects.create(docfile=my_file)
         # if my_file.name.endswith('.xlsx'):
         #     Document.objects.create(docfile=my_file)
         # else:
         #     return HttpResponse('/ghh')
-        return HttpResponse('')
+        return HttpResponse('web_report_card:test')
     return JsonResponse({'post':'fasle'})
