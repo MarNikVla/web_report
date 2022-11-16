@@ -32,20 +32,20 @@ class HomeView(FormView):
         return redirect(self.get_success_url(), foo=my_file)
 
 
-class TestView(FormView):
+class TestView(TemplateView):
     form_class = DocumentFormDrop
     template_name = 'web_report_card/test.html'
     success_url = reverse_lazy('web_report_card:home')
 
-    # def get(self, request, *args, **kwargs):
-    #     print('ffffffffffffffffffffffffffffffffffffffffffffff')
-    #     file = request.session['grafik']
-    #     print(file)
-    #     return super(TestView, self).get(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        print('ffffffffffffffffffffffffffffffffffffffffffffff')
+        file = request.session['grafik']
+        print(file)
+        return super(TestView, self).get(request, *args, **kwargs)
 
-    def form_valid(self, form):
-        Document.objects.create(**form.cleaned_data)
-        return redirect(self.get_success_url())
+    # def form_valid(self, form):
+    #     Document.objects.create(**form.cleaned_data)
+    #     return redirect(self.get_success_url())
 
 
 class TestViewDropzone(FormView):
