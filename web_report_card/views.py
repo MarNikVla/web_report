@@ -9,29 +9,32 @@ from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import FormMixin, FormView
 
 from web_report_card.forms import DocumentForm, DocumentFormDrop
+from web_report_card.main import save_file, save_file_for_web
 from web_report_card.models import Document
 
 
-class HomeView(FormView):
-    form_class = DocumentFormDrop
+class HomeView(TemplateView):
     template_name = 'web_report_card/main.html'
 
-    def get_success_url(self):
-        return reverse('web_report_card:home')
 
 
 
 class TestView(TemplateView):
-    form_class = DocumentFormDrop
+
     template_name = 'web_report_card/test.html'
-    success_url = reverse_lazy('web_report_card:home')
+
+    def make_result(self, file):
+        result = save_file_for_web(file)
+        return result
+
 
     def get(self, request, *args, **kwargs):
         print('grafik' in request.session)
         if 'grafik' in request.session:
-            print('ffffffffffffffffffffffffffffffffffffffffffffff')
-            file = request.session['grafik']
-            print(file.name)
+            # print('ffffffffffffffffffffffffffffffffffffffffffffff')
+            file = self.make_result(request.session['grafik'])
+            # print(file.name)
+            request.session['grafik'] = file
             return super(TestView, self).get(request, *args, **kwargs)
         else:
             raise Http404
@@ -42,12 +45,12 @@ class TestView(TemplateView):
 def file_upload(request):
     if request.method == 'POST':
         my_file = request.FILES.get('file')
-        print('sdfsfsfsfsfswfasf')
-        print(my_file.name)
+        # print('sdfsfsfsfsfswfasf')
+        # print(my_file.name)
 
         request.session['grafik'] = my_file
         # return HttpResponseRedirect(reverse('web_report_card:test'))
-    return JsonResponse({'post': 'Done!'})
+    return HttpResponse('file_upload - Done!')
 
 class FileDownloadView(View):
     # Set FILE_STORAGE_PATH value in settings.py
@@ -57,7 +60,7 @@ class FileDownloadView(View):
     # Set the content type value
     content_type_value = 'text/plain'
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         # self.file_name = file_name
         # file_path = os.path.join(self.folder_path, self.file_name)
         # file = request.session['grafik']

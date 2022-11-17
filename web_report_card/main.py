@@ -61,3 +61,19 @@ def save_file(file_name):
         fill_all_workers(get_workers(sheet))
     wb.save(report_card_file)
 
+def save_file_for_web(file):
+    """
+    save excel file with calculation results and do backup
+    :param file_name: name of exel file
+    :return:
+    """
+    report_card_file = file
+    # backup_report_card_file = report_card_file.parent.joinpath(f'backup_{report_card_file.name}')
+    wb = load_workbook(filename=report_card_file)
+    # if MAKE_BACKUP:
+    #     wb.save(backup_report_card_file)
+    for sheet in wb._sheets:
+        fill_all_workers(get_workers(sheet))
+    wb.save(report_card_file)
+    print('ere')
+    return report_card_file
