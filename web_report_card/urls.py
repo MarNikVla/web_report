@@ -9,6 +9,6 @@ urlpatterns = [
     # path('', views.HomeView.as_view(), name='home'),
     path('', views.HomeView.as_view(), name='home'),
     path('test/', views.TestView.as_view(), name='test'),
-    path('test-dropzone/', views.TestViewDropzone.as_view(), name='test-dropzone'),
+    path('download/', views.FileDownloadView.as_view(), name='download'),
     path('upload/', views.file_upload),
 ]
