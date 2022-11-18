@@ -1,3 +1,4 @@
+from django.core.files.storage import default_storage
 from django.http import Http404, HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -23,18 +24,22 @@ class TestView(TemplateView):
 
     template_name = 'web_report_card/test.html'
 
-    def make_result(self, file):
-        result = save_file_for_web(file)
+    def make_result(self, file_name):
+        result = save_file_for_web(file_name)
         return result
 
 
     def get(self, request, *args, **kwargs):
         print('grafik' in request.session)
         if 'grafik' in request.session:
-            # print('ffffffffffffffffffffffffffffffffffffffffffffff')
-            file = self.make_result(request.session['grafik'])
-            # print(file.name)
-            request.session['grafik'] = file
+            print('ffffffffffffffffffffffffffffffffffffffffffffff')
+            file = request.session['grafik']
+            file_name = default_storage.save(file.name, file)
+            # file = default_storage.open(file_name)
+            result_file = self.make_result(file_name)
+
+            print(default_storage)
+            request.session['file_result'] = result_file
             return super(TestView, self).get(request, *args, **kwargs)
         else:
             raise Http404
@@ -44,11 +49,13 @@ class TestView(TemplateView):
 
 def file_upload(request):
     if request.method == 'POST':
-        my_file = request.FILES.get('file')
+        file = request.FILES.get('file')
         # print('sdfsfsfsfsfswfasf')
         # print(my_file.name)
-
-        request.session['grafik'] = my_file
+        # with open()
+        # file_name = default_storage.save(file.name, file)
+        # print(default_storage)
+        request.session['grafik'] = file
         # return HttpResponseRedirect(reverse('web_report_card:test'))
     return HttpResponse('file_upload - Done!')
 
@@ -59,22 +66,24 @@ class FileDownloadView(View):
     file_name = ''
     # Set the content type value
     content_type_value = 'text/plain'
+    content_type_value_xlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
     def get(self, request, *args, **kwargs):
         # self.file_name = file_name
         # file_path = os.path.join(self.folder_path, self.file_name)
         # file = request.session['grafik']
         # file_name = file.name
-        if 'grafik' in request.session:
-            file = request.session['grafik']
-            file_name = file.name
+        if 'file_result' in request.session:
+            file_path = request.session['file_result']
+            file = default_storage.open(file_path)
+            print(file.name + 'ddddddddd')
             with file as fh:
                 response = HttpResponse(
                     fh.read(),
-                    content_type=self.content_type_value
+                    content_type=self.content_type_value_xlsx
                 )
-                response['Content-Disposition'] = 'attachment; filename=' + file_name
-            del request.session['grafik']
+                response['Content-Disposition'] = 'attachment; filename=' + file.name
+            del request.session['file_result']
             return response
         else:
             raise Http404
