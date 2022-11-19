@@ -1,89 +1,70 @@
+import pathlib
+
+from django.core.exceptions import EmptyResultSet
 from django.core.files.storage import default_storage
-from django.http import Http404, HttpResponse, JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy, reverse
-from django.utils.translation import gettext as _
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseServerError
+from django.urls import reverse
 
-# Create your views here.
 from django.views import View
-from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import FormMixin, FormView
+from django.views.generic import TemplateView
 
-from web_report_card.forms import DocumentForm, DocumentFormDrop
-from web_report_card.main import save_file, save_file_for_web
-from web_report_card.models import Document
+from web_report_card.main import make_file_for_web_app
 
+IN_SESSION_FILE_KEY = 'uploaded_file'
 
 class HomeView(TemplateView):
     template_name = 'web_report_card/main.html'
 
-
-
+class NotCorrectFileUploadView(TemplateView):
+    template_name = 'web_report_card/errors.html'
 
 class TestView(TemplateView):
-
     template_name = 'web_report_card/test.html'
 
     def make_result(self, file_name):
-        result = save_file_for_web(file_name)
-        return result
-
-
-    def get(self, request, *args, **kwargs):
-        print('grafik' in request.session)
-        if 'grafik' in request.session:
-            print('ffffffffffffffffffffffffffffffffffffffffffffff')
-            file = request.session['grafik']
-            file_name = default_storage.save(file.name, file)
-            # file = default_storage.open(file_name)
-            result_file = self.make_result(file_name)
-
-            print(default_storage)
-            request.session['file_result'] = result_file
-            return super(TestView, self).get(request, *args, **kwargs)
-        else:
+        try:
+            return make_file_for_web_app(file_name)
+        except:
             raise Http404
 
-
+    def get(self, request, *args, **kwargs):
+        if IN_SESSION_FILE_KEY in request.session:
+            file = request.session[IN_SESSION_FILE_KEY]
+            file_name = default_storage.save(file.name, file)
+            del request.session[IN_SESSION_FILE_KEY]
+            result_file_path = self.make_result(file_name)
+            request.session['result_file_path'] = result_file_path
+            return super(TestView, self).get(request, *args, **kwargs)
+        else:
+            # return HttpResponse('Загрузите корректный файл')
+            # return HttpResponseServerError("dff")
+            return HttpResponseRedirect(reverse('web_report_card:not_correct_file_upload'))
 
 
 def file_upload(request):
     if request.method == 'POST':
         file = request.FILES.get('file')
-        # print('sdfsfsfsfsfswfasf')
-        # print(my_file.name)
-        # with open()
-        # file_name = default_storage.save(file.name, file)
-        # print(default_storage)
-        request.session['grafik'] = file
-        # return HttpResponseRedirect(reverse('web_report_card:test'))
-    return HttpResponse('file_upload - Done!')
+        request.session[IN_SESSION_FILE_KEY] = file
+    return HttpResponse('Done!')
+
 
 class FileDownloadView(View):
-    # Set FILE_STORAGE_PATH value in settings.py
-    # folder_path = settings.FILE_STORAGE_PATH
-    # Here set the name of the file with extension
-    file_name = ''
-    # Set the content type value
-    content_type_value = 'text/plain'
+
     content_type_value_xlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
     def get(self, request, *args, **kwargs):
-        # self.file_name = file_name
-        # file_path = os.path.join(self.folder_path, self.file_name)
-        # file = request.session['grafik']
-        # file_name = file.name
-        if 'file_result' in request.session:
-            file_path = request.session['file_result']
+        if 'result_file_path' in request.session:
+            file_path = request.session['result_file_path']
             file = default_storage.open(file_path)
-            print(file.name + 'ddddddddd')
+            result_file_path_obj = pathlib.Path(file.name)
             with file as fh:
                 response = HttpResponse(
                     fh.read(),
                     content_type=self.content_type_value_xlsx
                 )
-                response['Content-Disposition'] = 'attachment; filename=' + file.name
-            del request.session['file_result']
+                response['Content-Disposition'] = 'attachment; filename=' + result_file_path_obj.name
+            del request.session['result_file_path']
+            result_file_path_obj.unlink(missing_ok=True)
             return response
         else:
             raise Http404

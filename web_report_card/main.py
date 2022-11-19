@@ -47,6 +47,7 @@ def fill_all_workers(workers_list: list[Worker]):
 def make_backup(file_name):
     pass
 
+
 def save_file(file_name):
     """
     save excel file with calculation results and do backup
@@ -62,20 +63,16 @@ def save_file(file_name):
         fill_all_workers(get_workers(sheet))
     wb.save(report_card_file)
 
-def save_file_for_web(file_name):
-    """
-    save excel file with calculation results and do backup
-    :param file_name: name of exel file
-    :return:
-    """
-    report_card_file_name = default_storage.path(file_name)
 
-    # backup_report_card_file = report_card_file_name.parent.joinpath(f'backup_{report_card_file_name.name}')
-    wb = load_workbook(filename=report_card_file_name)
-    # if MAKE_BACKUP:
-    #     wb.save(backup_report_card_file)
+def make_file_for_web_app(file_name):
+    """
+    save excel file with populated results
+    :param file_name: name of exel file
+    :return: name of exel file
+    """
+    report_card_file_path = default_storage.path(file_name)
+    wb = load_workbook(filename=report_card_file_path)
     for sheet in wb._sheets:
         fill_all_workers(get_workers(sheet))
-    wb.save(report_card_file_name)
-    print(report_card_file_name + "sdfsdf")
-    return report_card_file_name
+    wb.save(report_card_file_path)
+    return report_card_file_path
