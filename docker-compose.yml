@@ -1,0 +1,55 @@
+version: '3'
+# хранилище
+volumes:
+    pgdata:
+        driver: local
+services:
+    nginx:
+# при падении будет стараться подняться
+        restart: always
+# только свежий nginx
+        image: nginx:latest
+# слушает порт 8080
+        expose:
+          - 8080
+# мапаем порт 80 на его 8080. Тогда сайт будет доступен по адресу localhost. Убедись, что порт у тебя не занят.
+        ports:
+          - "80:8080"
+# монтируем только те директории, в которых лежит статика, т.к. nginx с динамикой не будет работать. Также директорию с логами и файл настройки, который мы подготовили.
+        volumes:
+            - ./static:/srv/www/web-report/static
+            - ./media:/srv/www/web-report/media
+            - ./logs:/srv/www/web-report/logs
+#            - ./sitename.conf:/etc/nginx/conf.d/sitename.conf
+# и nginx зависит от контейнера python. Т.е. python должен быть запущен первым
+        depends_on:
+            - python
+    python:
+        restart: always
+# указываем откуда собирать образ
+        build:
+            context: .
+#            dockerfile: Dockerfile
+# монтируем директорию проекта
+        volumes:
+            - . :/srv/www/web-report
+        expose:
+          - 8000
+        ports:
+            - 8000:8000
+# запускаем gunicorn
+        command: "gunicorn -c gunicorn.py simple_site_with_tests.wsgi"
+#    postgres:
+## Ниже даже расписывать не хочу, насколько все просто: логин, пароль, БД, порты и т.д.
+#        image: postgres:10
+#        ports:
+#            - 5432:5432
+#        environment:
+#            POSTGRES_USER: postgres
+#            POSTGRES_PASSWORD: postgres
+#            POSTGRES_DB: simple_site_with_tests
+#            PGDATA: /var/lib/postgresql/data
+#        volumes:
+#            - pgdata:/var/lib/postgresql/data
+#            - ./gims_db.sql:/docker-entrypoint-initdb.d/init.sql
+#            - ./init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
