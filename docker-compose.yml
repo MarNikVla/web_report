@@ -1,8 +1,8 @@
-version: '3'
-# хранилище
-volumes:
-  pgdata:
-    driver: local
+version: '3.8'
+## хранилище
+#volumes:
+#  pgdata:
+#    driver: local
 services:
   nginx:
     # при падении будет стараться подняться
@@ -23,8 +23,9 @@ services:
       - "./sitename.conf:/etc/nginx/conf.d/sitename.conf"
     # и nginx зависит от контейнера python. Т.е. python должен быть запущен первым
     depends_on:
-      - python
-  python:
+      - web_python
+
+  web_python:
     restart: always
     # указываем откуда собирать образ
     build:
@@ -37,19 +38,8 @@ services:
       - 8000
     ports:
       - 8000:8000
-      # запускаем gunicorn
-    command: "python waitress.py"
-        ##    postgres:
-        ### Ниже даже расписывать не хочу, насколько все просто: логин, пароль, БД, порты и т.д.
-        ##        image: postgres:10
-        ##        ports:
-        ##            - 5432:5432
-        ##        environment:
-        ##            POSTGRES_USER: postgres
-        ##            POSTGRES_PASSWORD: postgres
-        ##            POSTGRES_DB: simple_site_with_tests
-        ##            PGDATA: /var/lib/postgresql/data
-        ##        volumes:
-      ##            - pgdata:/var/lib/postgresql/data
-      ##            - ./gims_db.sql:/docker-entrypoint-initdb.d/init.sql
-      ##            - ./init-database.sh:/docker-entypoint-initdb.d/init-database.sh
+    command: python manage.py runserver 0.0.0.0:8000
+
+    env_file:
+      - ./.env.dev
+

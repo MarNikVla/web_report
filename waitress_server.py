@@ -1,5 +1,6 @@
 # from waitress import serve
-from waitress import
+from waitress import serve
+
 
 from web_report.wsgi import application
 

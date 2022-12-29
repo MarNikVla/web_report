@@ -9,8 +9,6 @@ django-bootstrap4 = "*"
 django-crispy-forms = "*"
 openpyxl = "*"
 django-debug-toolbar = "*"
-gevent = "*"
-waitress = "*"
 
 [dev-packages]
 
