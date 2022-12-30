@@ -34,11 +34,13 @@ services:
     # монтируем директорию проекта
     volumes:
       - ".:/srv/www/web-report"
-    expose:
-      - 8000
+#    expose:
+#      - 8000
     ports:
       - 8000:8000
-    command: "gunicorn -b 0.0.0.0:8000 web_report.wsgi:application"
+    command: "python manage.py runserver 0.0.0.0:8000
+"
+#    command: "gunicorn -b 0.0.0.0:8000 web_report.wsgi:application"
 #    ["gunicorn"  , "-b", "0.0.0.0:8000", "web_report.wsgi:application"]
 
     env_file:

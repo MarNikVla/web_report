@@ -138,4 +138,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 INTERNAL_IPS = ('127.0.0.1','::1', '0.0.0.0', '172.30.0.1')
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
-
