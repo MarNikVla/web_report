@@ -18,8 +18,8 @@ services:
     # монтируем только те директории, в которых лежит статика, т.к. nginx с динамикой не будет работать. Также директорию с логами и файл настройки, который мы подготовили.
     volumes:
       - "./static:/srv/www/web-report/static"
-      #            - ./media:/srv/www/web-report/media
-      #            - ./logs:/srv/www/web-report/logs
+      - "./media:/srv/www/web-report/media"
+      - "./logs:/srv/www/web-report/logs"
       - "./sitename.conf:/etc/nginx/conf.d/sitename.conf"
     # и nginx зависит от контейнера python. Т.е. python должен быть запущен первым
     depends_on:
@@ -38,7 +38,8 @@ services:
       - 8000
     ports:
       - 8000:8000
-    command: python manage.py runserver 0.0.0.0:8000
+    command: "gunicorn -b 0.0.0.0:8000 web_report.wsgi:application"
+#    ["gunicorn"  , "-b", "0.0.0.0:8000", "web_report.wsgi:application"]
 
     env_file:
       - ./.env.dev

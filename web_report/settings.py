@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-t(&go0caocucw-^!n%^li#23p@u(1e)nd@$kbjm-a&#x)!li1&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -135,7 +135,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-INTERNAL_IPS = ('127.0.0.1','::1', '0.0.0.0')
+INTERNAL_IPS = ('127.0.0.1','::1', '0.0.0.0', '172.30.0.1')
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
