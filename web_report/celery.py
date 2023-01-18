@@ -11,6 +11,5 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 
 if sys.platform == 'win32':
     os.environ.setdefault('FORKED_BY_MULTIPROCESSING', '1')
-    app.conf.broker_url = 'redis://localhost:6379/0'
 
 app.autodiscover_tasks()
