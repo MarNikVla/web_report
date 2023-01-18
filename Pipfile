@@ -10,6 +10,8 @@ django-crispy-forms = "*"
 openpyxl = "*"
 django-debug-toolbar = "*"
 gunicorn = "*"
+celery = "*"
+redis = "*"
 
 [dev-packages]
 

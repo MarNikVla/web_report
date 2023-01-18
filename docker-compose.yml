@@ -8,7 +8,7 @@ services:
     # при падении будет стараться подняться
     restart: always
     # только свежий nginx
-    image: nginx:latest
+    image: nginx:1.23.3
     # слушает порт 8080
     expose:
       - 8080
@@ -36,11 +36,10 @@ services:
       - ".:/srv/www/web-report"
 #    expose:
 #      - 8000
-    ports:
-      - 8000:8000
-    command: "python manage.py runserver 0.0.0.0:8000
-"
-#    command: "gunicorn -b 0.0.0.0:8000 web_report.wsgi:application"
+#    ports:
+#      - 8000:8000
+#    command: "python manage.py runserver 0.0.0.0:8000"
+    command: "gunicorn -b 0.0.0.0:8000 web_report.wsgi:application"
 #    ["gunicorn"  , "-b", "0.0.0.0:8000", "web_report.wsgi:application"]
 
     env_file:

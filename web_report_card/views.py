@@ -9,6 +9,7 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from web_report_card.main import make_file_for_web_app
+from web_report_card.tasks import del_file_task
 
 IN_SESSION_FILE_KEY = 'uploaded_file'
 FILE_PATH = 'File_path'
@@ -27,6 +28,7 @@ class NotCorrectFileUploadView(TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['error'] = kwargs['error']
+        # data['task'] = create_task
         return data
 
 
@@ -41,13 +43,15 @@ class TestView(TemplateView):
         if IN_SESSION_FILE_KEY in request.session:
             file = request.session[IN_SESSION_FILE_KEY]
             file_path = default_storage.save(file.name, file)
+            del_file_task.apply_async((file_path,),countdown=8)
+            # del_file(file_path)
             del request.session[IN_SESSION_FILE_KEY]
             try:
                 result_file_path = self.make_result(file_path)
                 print(result_file_path)
                 request.session[FILE_PATH] = result_file_path
             except Exception as e:
-                default_storage.delete(file_path)
+                # default_storage.delete(file_path)
                 return HttpResponseRedirect(reverse('web_report_card:not_correct_file_upload', kwargs={'error': e}))
             return super(TestView, self).get(request, *args, **kwargs)
         else:
@@ -59,6 +63,7 @@ def file_upload(request):
     if request.method == 'POST':
         file = request.FILES.get('file')
         request.session[IN_SESSION_FILE_KEY] = file
+
     return HttpResponse('Done!')
 
 
