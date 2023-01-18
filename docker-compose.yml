@@ -34,14 +34,26 @@ services:
     # монтируем директорию проекта
     volumes:
       - ".:/srv/www/web-report"
-#    expose:
-#      - 8000
-#    ports:
-#      - 8000:8000
-#    command: "python manage.py runserver 0.0.0.0:8000"
+    #    expose:
+    #      - 8000
+    #    ports:
+    #      - 8000:8000
+    #    command: "python manage.py runserver 0.0.0.0:8000"
     command: "gunicorn -b 0.0.0.0:8000 web_report.wsgi:application"
-#    ["gunicorn"  , "-b", "0.0.0.0:8000", "web_report.wsgi:application"]
+    #    ["gunicorn"  , "-b", "0.0.0.0:8000", "web_report.wsgi:application"]
 
     env_file:
       - ./.env.dev
 
+  redis:
+    image: redis:latest
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A web_report worker -l info
+    volumes:
+      - ".:/srv/www/web-report"
+    depends_on:
+      - redis

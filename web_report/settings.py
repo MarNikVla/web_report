@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -143,12 +144,21 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = '6379'
 
+if sys.platform == 'win32':
+    CELERY_BROKER = "redis://" + REDIS_HOST + ':' + REDIS_PORT + '/0'
+    CELERY_BACKEND = "redis://" + REDIS_HOST + ':' + REDIS_PORT + '/0'
+else:
+    CELERY_BROKER_URL = 'redis://redis:6379'
+    CELERY_RESULT_BACKEND = 'redis://redis:6379'
+
 # Celery Configuration Options
-CELERY_TIMEZONE = "Australia/Tasmania"
+CELERY_TIMEZONE = 'Europe/Moscow'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_BROKER = "redis://" + REDIS_HOST + ':' + REDIS_PORT + '/0'
-CELERY_BACKEND = "redis://" + REDIS_HOST + ':' + REDIS_PORT + '/0'
+# CELERY_BROKER_URL = 'redis://redis:6379'
+# CELERY_RESULT_BACKEND = 'redis://redis:6379'
+# CELERY_BROKER = "redis://" + REDIS_HOST + ':' + REDIS_PORT + '/0'
+# CELERY_BACKEND = "redis://" + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
