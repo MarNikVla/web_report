@@ -1,6 +1,6 @@
 Dropzone.autoDiscover = false;
 const myDropzone = new Dropzone('#my-dropzone', {
-    url:'/upload/',
+    url: '/upload/',
     autoProcessQueue: true,
     maxFiles: 1,
     maxFilesize: 3,
@@ -11,8 +11,8 @@ const myDropzone = new Dropzone('#my-dropzone', {
 })
 
 $("#button").click(function (e) {
+    // redirect to url http://localhost/result/
     top.location.href = 'result';
     e.preventDefault();
-
     myDropzone.processQueue();
 });
