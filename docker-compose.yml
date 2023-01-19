@@ -1,56 +1,42 @@
 version: '3.8'
-## хранилище
-#volumes:
-#  pgdata:
-#    driver: local
+
 services:
   nginx:
-    # при падении будет стараться подняться
     restart: always
-    # только свежий nginx
     image: nginx:1.23.3
-    # слушает порт 8080
     expose:
       - 8080
-    # мапаем порт 80 на его 8080. Тогда сайт будет доступен по адресу localhost. Убедись, что порт у тебя не занят.
     ports:
       - "80:8080"
-    # монтируем только те директории, в которых лежит статика, т.к. nginx с динамикой не будет работать. Также директорию с логами и файл настройки, который мы подготовили.
     volumes:
       - "./static:/srv/www/web-report/static"
       - "./media:/srv/www/web-report/media"
-      - "./logs:/srv/www/web-report/logs"
+      #      - "./logs:/srv/www/web-report/logs"
       - "./sitename.conf:/etc/nginx/conf.d/sitename.conf"
-    # и nginx зависит от контейнера python. Т.е. python должен быть запущен первым
     depends_on:
       - web_python
 
   web_python:
     restart: always
-    # указываем откуда собирать образ
+
     build:
-      context: .
+#      context: .
       dockerfile: Dockerfile
-    # монтируем директорию проекта
+
     volumes:
       - ".:/srv/www/web-report"
-    #    expose:
-    #      - 8000
-    #    ports:
-    #      - 8000:8000
-    #    command: "python manage.py runserver 0.0.0.0:8000"
+
     command: "gunicorn -b 0.0.0.0:8000 web_report.wsgi:application"
-    #    ["gunicorn"  , "-b", "0.0.0.0:8000", "web_report.wsgi:application"]
 
     env_file:
       - ./.env.dev
 
   redis:
-    image: redis:latest
+    image: redis:6.2.10
 
   celery:
     build:
-      context: .
+#      context: .
       dockerfile: Dockerfile
     command: celery -A web_report worker -l info
     volumes:

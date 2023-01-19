@@ -1,12 +1,10 @@
-import time
-
 from celery import shared_task
 from django.core.files.storage import default_storage
 
 
 @shared_task
-def del_file_task(file_path='fsdfs'):
+def del_file_task(file_path):
     print('start')
     default_storage.delete(file_path)
-    print('dfsdf')
+    print('finish')
     return 'Done'

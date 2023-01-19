@@ -2,8 +2,8 @@ Dropzone.autoDiscover = false;
 const myDropzone = new Dropzone('#my-dropzone', {
     url:'/upload/',
     autoProcessQueue: true,
-    maxFiles: 5,
-    maxFilesize: 2,
+    maxFiles: 1,
+    maxFilesize: 3,
     // acceptedFiles:'.xlsx',
     addRemoveLinks: true,
     dictDefaultMessage: 'Upload your files here',
@@ -11,7 +11,7 @@ const myDropzone = new Dropzone('#my-dropzone', {
 })
 
 $("#button").click(function (e) {
-    top.location.href = 'test';
+    top.location.href = 'result';
     e.preventDefault();
 
     myDropzone.processQueue();

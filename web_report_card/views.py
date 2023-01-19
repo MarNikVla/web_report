@@ -1,8 +1,7 @@
 import pathlib
 
-from django.core.exceptions import EmptyResultSet
 from django.core.files.storage import default_storage
-from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseServerError
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.encoding import escape_uri_path
 
@@ -30,8 +29,8 @@ class NotCorrectFileUploadView(TemplateView):
         return data
 
 
-class TestView(TemplateView):
-    template_name = 'web_report_card/test.html'
+class ResultView(TemplateView):
+    template_name = 'web_report_card/result.html'
 
     def make_result(self, file_name):
         result_file_path = make_file_for_web_app(file_name)
@@ -41,18 +40,15 @@ class TestView(TemplateView):
         if IN_SESSION_FILE_KEY in request.session:
             file = request.session[IN_SESSION_FILE_KEY]
             file_path = default_storage.save(file.name, file)
-            del_file_task.apply_async((file_path,), countdown=60 * 5)
-            # del_file(file_path)
+            del_file_task.apply_async((file_path,), countdown=60 * 1)
             del request.session[IN_SESSION_FILE_KEY]
             try:
                 result_file_path = self.make_result(file_path)
-                # print(result_file_path)
                 request.session[FILE_PATH] = result_file_path
             except Exception as e:
-                # default_storage.delete(file_path)
                 return HttpResponseRedirect(
                     reverse('web_report_card:not_correct_file_upload', kwargs={'error': e}))
-            return super(TestView, self).get(request, *args, **kwargs)
+            return super(ResultView, self).get(request, *args, **kwargs)
         else:
             return HttpResponseRedirect(
                 reverse('web_report_card:not_correct_file_upload',
@@ -85,7 +81,7 @@ class FileDownloadView(View):
                 response['Content-Disposition'] = "attachment; filename="+ escape_uri_path(result_file_path_obj.name)
                 print(result_file_path_obj.name)
             del request.session[FILE_PATH]
-            # default_storage.delete(file_path)
+            default_storage.delete(file_path)
             return response
         else:
             raise Http404
