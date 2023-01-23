@@ -1,13 +1,13 @@
 {% extends 'web_report_card/base.html' %}
 {% block title %}
-    Заполнение графика
+    Заполнение табеля
 {% endblock title %}
         {% block content_top %}
-            <h1>Заполнение графика</h1>
-            <p class="lead">Перенесите файл графика в загрузочную область ниже</p>
+            <h1>Заполнение табеля</h1>
+            <p class="lead">Перенесите файл табеля в загрузочную область ниже</p>
         {% endblock content_top %}
 {% block content %}
-    <h6>Загрузите график</h6>
+    <h6>Загрузите табель</h6>
     <br>
     <form enctype='multipart/form-data' action="{% url 'web_report_card:home' %}"
           method='POST' class="dropzone dz container" id="my-dropzone">
@@ -18,7 +18,7 @@
     </form>
     <div class="row justify-content-end">
         <div class="col align-self-end">
-            <button type="submit" id="grafik_button" class="btn btn-primary">Заполнить</button>
+            <button type="submit" id="table_button" class="btn btn-primary">Заполнить</button>
         </div>
 
     </div>

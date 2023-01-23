@@ -1,18 +1,26 @@
 Dropzone.autoDiscover = false;
-const myDropzone = new Dropzone('#my-dropzone', {
+const myDropzoneTable = new Dropzone('#my-dropzone', {
     url:'/upload/',
     autoProcessQueue: true,
     maxFiles: 1,
     maxFilesize: 3,
     // acceptedFiles:'.xlsx',
     addRemoveLinks: true,
-    dictDefaultMessage: 'Загрузите табель рабочего времени',
+    dictDefaultMessage: 'Загрузите файл .xlsx',
 
 })
 
-$("#button").click(function (e) {
-    top.location.href = 'result';
+
+$("#table_button").click(function (e) {
+    top.location.href = 'table-result';
     e.preventDefault();
 
-    myDropzone.processQueue();
+    myDropzoneTable.processQueue();
+});
+
+$("#grafik_button").click(function (e) {
+    top.location.href = 'grafik-result';
+    e.preventDefault();
+
+    myDropzoneGrafik.processQueue();
 });

@@ -64,7 +64,7 @@ def save_file(file_name):
     wb.save(report_card_file)
 
 
-def make_file_for_web_app(file_name):
+def make_table_file_for_web_app(file_name):
     """
     save excel file with populated results
     :param file_name: name of exel file
