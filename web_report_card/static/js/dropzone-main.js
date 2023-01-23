@@ -6,7 +6,7 @@ const myDropzone = new Dropzone('#my-dropzone', {
     maxFilesize: 3,
     // acceptedFiles:'.xlsx',
     addRemoveLinks: true,
-    dictDefaultMessage: 'Upload your files here',
+    dictDefaultMessage: 'Загрузите табель рабочего времени',
 
 })
 

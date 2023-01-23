@@ -1,0 +1,19 @@
+{% extends 'web_report_card/base.html' %}
+
+{% block content %}
+    <h6>Загрузите график</h6>
+    <br>
+    <form enctype='multipart/form-data' action="{% url 'web_report_card:home' %}"
+          method='POST' class="dropzone dz container" id="my-dropzone">
+        {% csrf_token %}
+        <div class="fallback">
+            <input name="file" type="file" multiple/>
+        </div>
+    </form>
+    <div class="row justify-content-end">
+        <div class="col align-self-end">
+            <button type="submit" id="button" class="btn btn-primary">Заполнить</button>
+        </div>
+
+    </div>
+{% endblock %}
