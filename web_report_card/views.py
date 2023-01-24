@@ -8,7 +8,7 @@ from django.utils.encoding import escape_uri_path
 from django.views import View
 from django.views.generic import TemplateView
 
-from web_report_card.main import make_table_file_for_web_app
+from web_report_card.main import make_table_file_for_web_app, make_grafik_file_for_web_app
 from web_report_card.tasks import del_file_task
 
 IN_SESSION_FILE_KEY = 'uploaded_file'
@@ -17,6 +17,7 @@ FILE_PATH = 'File_path'
 
 class HomeView(TemplateView):
     template_name = 'web_report_card/table.html'
+
 
 class GrafikView(TemplateView):
     template_name = 'web_report_card/grafik.html'
@@ -57,11 +58,12 @@ class ResultTableView(TemplateView):
                 reverse('web_report_card:not_correct_file_upload',
                         kwargs={'error': 'Файл не загружен'}))
 
+
 class ResultGrafikView(TemplateView):
     template_name = 'web_report_card/result.html'
 
     def make_result(self, file_name):
-        result_file_path = make_table_file_for_web_app(file_name)
+        result_file_path = make_grafik_file_for_web_app(file_name)
         return result_file_path
 
     def get(self, request, *args, **kwargs):
@@ -106,8 +108,8 @@ class FileDownloadView(View):
                 )
                 # response[
                 #     'Content-Disposition'] = 'attachment; filename=' + result_file_path_obj.name
-                response['Content-Disposition'] = "attachment; filename="+ escape_uri_path(result_file_path_obj.name)
-                print(result_file_path_obj.name)
+                response['Content-Disposition'] = "attachment; filename=" + escape_uri_path(
+                    result_file_path_obj.name)
             del request.session[FILE_PATH]
             default_storage.delete(file_path)
             return response
