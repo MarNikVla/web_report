@@ -114,4 +114,4 @@ class FileDownloadView(View):
             default_storage.delete(file_path)
             return response
         else:
-            raise Http404
+            raise Http404('Повторная загрузка страницы (NO FILE_PATH in request.session')

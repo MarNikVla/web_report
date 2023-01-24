@@ -12,6 +12,7 @@ django-debug-toolbar = "*"
 gunicorn = "*"
 celery = "*"
 redis = "*"
+django-environ = "*"
 
 [dev-packages]
 

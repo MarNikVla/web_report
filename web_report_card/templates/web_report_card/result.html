@@ -1,13 +1,19 @@
 {% extends 'web_report_card/base.html' %}
 {% load bootstrap4 %}
+{% block title %}
+    Результат
+{% endblock title %}
+{% block content_top %}
+    <h1>Результат</h1>
+    <p class="lead">Скачайте файл с результатом</p>
+{% endblock content_top %}
 {% block content %}
-    <h6>Result</h6>
+{#    <h6>Result</h6>#}
     <br>
 
     <div class="row justify-content-end">
         <div class="col align-self-end">
             {% bootstrap_button "download" href='http://127.0.0.1:8000/download' button_type="link" button_class="btn-primary" %}
-            <button type="submit" id="button" class="btn btn-primary">hthth</button>
         </div>
 
     </div>
