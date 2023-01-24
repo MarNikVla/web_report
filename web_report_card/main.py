@@ -77,7 +77,7 @@ def make_table_file_for_web_app(file_name):
     :param file_name: name of exel file
     :return: name of exel file
     """
-    start_row_of_names_table: int = 15
+    start_row_of_names_table: int = 13
     final_row_of_names_table: int = 49
     column_of_names_table: int = 2
 

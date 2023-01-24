@@ -8,12 +8,14 @@
     <p class="lead">Скачайте файл с результатом</p>
 {% endblock content_top %}
 {% block content %}
-{#    <h6>Result</h6>#}
+    {#    <h6>Result</h6>#}
     <br>
 
     <div class="row justify-content-end">
         <div class="col align-self-end">
-            {% bootstrap_button "download" href='http://127.0.0.1:8000/download' button_type="link" button_class="btn-primary" %}
+            <a href="{% url "web_report_card:download" %}" class="btn btn-info" role="button">Скачать файл</a>
+
+{#            {% bootstrap_button button_type="link" button_class="btn-primary" href="{% url "web_report_card:grafik" %}" %}#}
         </div>
 
     </div>
