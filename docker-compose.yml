@@ -20,7 +20,7 @@ services:
     restart: always
 
     build:
-#      context: .
+      context: .
       dockerfile: Dockerfile
 
     volumes:
@@ -36,7 +36,7 @@ services:
 
   celery:
     build:
-#      context: .
+      context: .
       dockerfile: Dockerfile
     command: celery -A web_report worker -l info
     volumes:
