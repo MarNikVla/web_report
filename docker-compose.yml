@@ -1,8 +1,9 @@
-version: '3'
+version: '3.1'
 
 services:
   nginx:
     restart: always
+    container_name:  web_report_nginx
     image: nginx:1.23.3
     expose:
       - 8080
@@ -18,6 +19,7 @@ services:
 
   web_python:
     restart: always
+    container_name:  web_report_python39
 
     build:
       context: .
@@ -35,11 +37,14 @@ services:
     image: redis:6.2.10
 
   celery:
+    container_name:  web_report_celery
     build:
       context: .
       dockerfile: Dockerfile
     command: celery -A web_report worker -l info
     volumes:
       - ".:/srv/www/web-report"
+    env_file:
+      - ./.env.dev
     depends_on:
       - redis
