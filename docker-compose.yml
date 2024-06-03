@@ -36,10 +36,12 @@ services:
 
   celery:
     container_name:  web_report_celery
+    restart: always
+
     build:
       context: .
-      dockerfile: Dockerfile
-    command: celery -A web_report worker -l info
+    command: celery -A web_report worker --loglevel=info --logfile=celery-worker.log
+
     volumes:
       - ".:/srv/www/web-report"
     env_file:
