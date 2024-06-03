@@ -11,8 +11,6 @@ services:
       - "80:8080"
     volumes:
       - "./static:/srv/www/web-report/static"
-      - "./media:/srv/www/web-report/media"
-      #      - "./logs:/srv/www/web-report/logs"
       - "./sitename.conf:/etc/nginx/conf.d/sitename.conf"
     depends_on:
       - web_python
@@ -31,7 +29,7 @@ services:
     command: "gunicorn -b 0.0.0.0:8000 web_report.wsgi:application"
 
     env_file:
-      - ./.env.dev
+      - .env
 
   redis:
     image: redis:6.2.10
@@ -45,6 +43,6 @@ services:
     volumes:
       - ".:/srv/www/web-report"
     env_file:
-      - ./.env.dev
+      - .env
     depends_on:
       - redis
